@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-app
+  Sample SAM Template for sam-app
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 10
+
+Resources:
+  NormalFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: normal-function/
+      Handler: app.handler
+      Runtime: nodejs12.x
+  DockerImageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+    Metadata:
+      DockerTag: test
+      DockerContext: ./docker-image-function
+      Dockerfile: Dockerfile
+
+Outputs:
+  DockerImageFunction:
+    Description: "FuncDockerImage"
+    Value: !GetAtt DockerImageFunction.Arn
+  NormalFunction:
+    Description: "NormalFunction"
+    Value: !GetAtt NormalFunction.Arn
